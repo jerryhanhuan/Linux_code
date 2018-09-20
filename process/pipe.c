@@ -5,6 +5,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 /*
+无名管道 只能在具有亲缘关系的进程之间使用 父子进程  兄弟进程
 child - >paernt
 fd[0] read
 fd[1] write
