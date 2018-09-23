@@ -25,7 +25,7 @@ int main(int argc, char** argv)
     }
 
     printf("准备读取数据\n");
-    fd = open(FIFO, O_RDONLY, 0);
+    fd = open(FIFO, O_RDONLY, 0); //block mode,block until one process write to FIFO
     if(fd == -1)
     {
         perror("打开FIFO");
@@ -34,6 +34,7 @@ int main(int argc, char** argv)
 
     while(1)
     {
+        printf("wait for read\n");
         if((nread = read(fd, buf_r, 100)) == -1)
         {
             if(errno == EAGAIN) 
