@@ -132,6 +132,86 @@ int get_print_date(char *date)
 }
 
 
+/*
+    获取当前可见日期: struct tm ——> printable string
+    流程: struct tm ——> 可见日期
+    返回格式为: Fri Oct 12 11:40:58 2018\n"
+
+*/
+
+int get_print_date2(char *date)
+{
+    time_t t;
+    char buf[50]={0};
+    struct tm ttime;
+    time(&t);
+    localtime_r(&t,&ttime);
+    asctime_r(&ttime,buf);
+    strcpy(date,buf);
+    return 0;
+}
+
+
+/*
+    YYYY-MM-DD HH:MM:SS ——> time_t——> systime
+    
+*/
+
+int set_sys_time(char *date)
+{
+    int ret = 0;
+    time_t t;
+    struct tm t_time;
+    if(strptime(date,"%Y-%m-%d %H:%M:%S",&t_time) == NULL)
+    {
+        perror("strptime");
+         return -1;
+    }
+       
+    t = mktime(&t_time);
+	printf("set t::[%ld]\n",t);
+    ret = stime(&t);
+    return ret;
+}
+
+
+int set_hwclock()
+{
+    static char *rtc_device = "/dev/rtc";
+    int n = 50; //try time
+    int rtc ; //dev fd
+    while(( rtc = open(rtc_device,O_WRONLY,0666))<0)
+    {
+            //	"/dev/rtc" are exclusive open device
+            if(!(--n) || errno!=EBUSY)
+            {
+                return errno;
+            }
+            usleep(20*1000); // 20 ms delay
+    }
+    time_t t;
+    struct tm utc;
+    time(&t);
+	printf("get t::[%ld]\n",t);
+    gmtime_r(&t,&utc);
+    utc.tm_isdst = 0;	// disable DST
+    if (ioctl(rtc,RTC_SET_TIME, (struct rtc_time *)&utc) == -1)
+	{
+		n = errno;
+		close(rtc);
+		return n;
+	}	
+	close(rtc);
+	return 0;	
+}
+
+
+
+
+
+
+
+
 
 
 
@@ -149,8 +229,12 @@ int main()
         memset(date,0,sizeof(date));
         get_print_date(date);
         printf("date::%s",date);
+        memset(date,0,sizeof(date));
+        get_print_date2(date);
+        printf("date::%s",date);
         printf("done\n");
         return 0;
+
 
 }
 
