@@ -16,6 +16,24 @@ long tv_sec;    //秒
 long tv_usec;   //微秒
 }
 
+struct timeval有两个成员，一个是秒，一个是微秒, 所以最高精确度是微秒。
+一般由函数int gettimeofday(struct timeval *tv, struct timezone *tz)获取系统的时间 
+
+struct timespec {
+time_t tv_sec; // seconds
+long tv_nsec; // and nanoseconds
+};
+
+struct timespec有两个成员，一个是秒，一个是纳秒, 所以最高精确度是纳秒。
+eg:
+struct timespec ts;
+clock_gettime(CLOCK_MONOTONIC,&ts);
+
+CLOCK_REALTIME 统当前时间，从1970年1.1日算起
+CLOCK_MONOTONIC 系统的启动时间，不能被设置
+CLOCK_PROCESS_CPUTIME_ID 本进程运行时间
+CLOCK_THREAD_CPUTIME_ID 本线程运行时间
+
 struct timezone{  
     int tz_minuteswest; //miniutes west of Greenwich* 
     int tz_dsttime; //type of DST correction
