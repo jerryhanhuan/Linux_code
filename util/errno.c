@@ -16,20 +16,22 @@
 
 int gdata  = 0;
 
-void * fun1(void)
+void * fun1()
 {
     gdata = 10;
     errno = 10;
+    sleep(1);
     printf("errno is %d data is %d \n",errno,gdata);
-    exit(0);
+    return NULL;
 }
 
-void * fun2(void)
+void * fun2()
 {
     gdata = 5;
     errno = 5;
+    sleep(1);
     printf("errno is %d data is %d \n",errno,gdata);
-    exit(0);
+    return NULL;
 }
 
 
