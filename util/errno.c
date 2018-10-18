@@ -31,6 +31,7 @@ void * fun2()
     errno = 5;
     sleep(1);
     printf("errno is %d data is %d \n",errno,gdata);
+    //exit(0);
     return NULL;
 }
 
@@ -60,6 +61,16 @@ int main()
 }
 
 
+/*
+output:
+errno is 5 data is 10 
+errno is 10 data is 10 
+exit
+
+note:
+exit(0) 退出程序,而不是函数
+
+*/
 
 
 
