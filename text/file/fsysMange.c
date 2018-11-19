@@ -44,10 +44,40 @@ int GetSubDirNum(char *rootdir,char subdirName[][128])
 
 
 //获取目录下文件数目
+int GetDirFileNum(char *dirPath,char fileName[][128])
+{
+    int ret = 0;
+    DIR *dir = NULL;
+    struct dirent *pStResult = NULL;
+    struct dirent *pStEntry = NULL; 
+    int count = 0;
+    if(access(dirPath,F_OK)!=0)
+    {
+        printf("in GetDirFileNum::can not access dirPath[%s] errno[%d]\n",dirPath,errno);
+        return -1;
+    }
+    dir = opendir(dirPath);
+    if(!dir)
+    {
+        printf("in GetDirFileNum::opendir dirPath[%s] errno[%d]\n",dirPath,errno);
+        return -2;
+    }
+    pStEntry = malloc(sizeof(struct dirent)*1);
+    while(!readdir_r(dir,pStEntry,&pStResult) && pStResult!=NULL)
+    {
+        if(pStEntry->d_type == DT_REG)
+        {
+            strcpy(fileName[count],pStEntry->d_name);
+            count++;
+        }
+    }   
+    free(pStEntry);
+    closedir(dir);
+    return count;
+}
 
 
-
-
+ 
 
 
 
