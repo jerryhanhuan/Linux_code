@@ -5,6 +5,8 @@
 #include<sys/types.h>
 #include<dirent.h>
 #include<errno.h>
+#include <sys/stat.h>
+#include <stdarg.h>
 
 /*
 struct dirent {
@@ -41,6 +43,18 @@ int IsQuit(char *p)
 }
 
 
+int ToUpperCase(char *str)
+{
+	int	i = 0;
+
+	while (str[i])
+	{
+		if ((str[i] >= 'a') && (str[i] <= 'z'))
+			str[i] = str[i] + 'A' - 'a';
+		i++;
+	}
+	return(0);
+}
 
 char *Input(const char *fmt,...)
 {
