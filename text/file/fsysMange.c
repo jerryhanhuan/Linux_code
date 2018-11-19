@@ -84,7 +84,7 @@ char *Input(const char *fmt,...)
 
 
 /*
-    功能: 获取目录下所有的子目录路径(绝对路径，只包含子目录，不包含普通文件)
+    功能: 获取目录下所有的子目录名(不包含路径名，只包含子目录，不包含普通文件)
     函数名:GetSubDirNum
     参数：
     输入:
@@ -130,7 +130,7 @@ int GetSubDirNum(char *rootdir,char subdirName[][128])
 
 
 /*
-    功能: 获取目录下所有的文件名(绝对路径)
+    功能: 获取目录下所有的文件名(不包含路径)
     函数名:GetSubDirNum
     参数：
     输入:
@@ -271,7 +271,7 @@ int main(int argc,char **argv)
 #endif
     printf("fsysMange test::\n");
 	printf("01		Get directory sub directory\n");
-	printf("02		Get directory subdirectory\n");
+	printf("02		Get directory file\n");
     printf("03      GetDir \n");
 	printf("Exit	exit\n");
 	printf("\n");
