@@ -31,18 +31,6 @@ DT_UNKNOWN  The file type is unknown.
 */
 
 
-
-char	pgUnionInputStr[8192+1];
-int IsQuit(char *p)
-{
-	ToUpperCase(p);
-	if ((strcasecmp (p,"QUIT") == 0) || (strcasecmp (p,"EXIT") == 0))
-		return(1);
-	else
-		return(0);
-}
-
-
 int ToUpperCase(char *str)
 {
 	int	i = 0;
@@ -55,6 +43,18 @@ int ToUpperCase(char *str)
 	}
 	return(0);
 }
+
+char	pgUnionInputStr[8192+1];
+int IsQuit(char *p)
+{
+	ToUpperCase(p);
+	if ((strcasecmp (p,"QUIT") == 0) || (strcasecmp (p,"EXIT") == 0))
+		return(1);
+	else
+		return(0);
+}
+
+
 
 char *Input(const char *fmt,...)
 {
@@ -179,7 +179,7 @@ int GetDir(char *dirPath)
     {
         if(mkdir(dirPath,S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) < 0)
         {
-            printf("in GetDir::mkdir logDir[%s] errno[%d]\n",logDir,errno);
+            printf("in GetDir::mkdir dirPath[%s] errno[%d]\n",dirPath,errno);
             return -1;
         }		
     }
