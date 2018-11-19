@@ -158,6 +158,21 @@ int GetDirFileNum(char *dirPath,char fileName[][128])
     return count;
 }
 
+int GetDir(char *dirPath)
+{
+    int ret = 0;
+    if(access(dirPath,F_OK)!=0)
+    {
+        if(mkdir(logDir,S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) < 0)
+        {
+            printf("in GetDir::mkdir logDir[%s] errno[%d]\n",logDir,errno);
+            return -1;
+        }		
+    }
+    return 0；
+}
+
+
 
 int test_GetSubDirNum()
 {
@@ -207,7 +222,26 @@ int test_GetDirFileNum()
     }
     return 0;
 }
+
+int test_GetDir()
+{
+    int ret = 0;
+    char root_dir_path[256]={0};
+    char subdirName[1024][128]={0};
+    int dirnum = 0;
+    char *ptr = NULL;
+    ptr = Input("Please input  directory path::");
+    strcpy(root_dir_path,ptr);
+    if((ret = GetDir(root_dir_path))<0)
+    {
+        printf("GetDir failed \n");
+        return -1;
+    }
+    printf("get dir [%s] ok \n",root_dir_path);
+    return 0;
+}
  
+
 
 
 
@@ -224,6 +258,7 @@ int main(int argc,char **argv)
     printf("fsysMange test::\n");
 	printf("01		Get directory sub directory\n");
 	printf("02		Get directory subdirectory\n");
+    printf("03      GetDir \n");
 	printf("Exit	exit\n");
 	printf("\n");
 
@@ -246,7 +281,9 @@ int main(int argc,char **argv)
 	case 2:
 		test_GetDirFileNum();
 		break;
-	
+	case 3:
+        test_GetDir();
+        break;
 	default:
 		printf("not support the choice\n");
 		break;
