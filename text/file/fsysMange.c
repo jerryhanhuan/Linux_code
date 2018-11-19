@@ -177,13 +177,13 @@ int GetDir(char *dirPath)
     int ret = 0;
     if(access(dirPath,F_OK)!=0)
     {
-        if(mkdir(logDir,S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) < 0)
+        if(mkdir(dirPath,S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) < 0)
         {
             printf("in GetDir::mkdir logDir[%s] errno[%d]\n",logDir,errno);
             return -1;
         }		
     }
-    return 0；
+    return 0;
 }
 
 
