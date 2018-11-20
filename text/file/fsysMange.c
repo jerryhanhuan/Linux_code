@@ -8,6 +8,7 @@
 #include <sys/stat.h>
 #include <stdarg.h>
 
+
 /*
 struct dirent {
                ino_t          d_ino;       // inode number 
@@ -187,6 +188,28 @@ int GetDir(char *dirPath)
 }
 
 
+/*
+    获取某个目录上次修改的时间
+*/
+
+long GetDirLastModifyTime(char *path)
+{
+    int ret = 0;
+    long changetime = 0L;
+    struct stat finfo;
+    memset(&finfo,0,sizeof(finfo));
+    GetDir(path);
+    if(stat(path,&finfo) != 0)
+    {
+        printf("in GetDirLastModifyTime::stat path[%s] failed errno[%d]\n",path,errno);
+        return -1;
+    }
+    changetime = finfo.st_mtime;
+    return changetime;
+}
+
+
+
 
 int test_GetSubDirNum()
 {
@@ -256,6 +279,25 @@ int test_GetDir()
 }
  
 
+ int test_GetDirLastModifyTime()
+ {
+      int ret = 0;
+    char root_dir_path[256]={0};
+    char subdirName[1024][128]={0};
+    int dirnum = 0;
+    char *ptr = NULL;
+    ptr = Input("Please input  directory path::");
+    strcpy(root_dir_path,ptr);
+    long time = 0L;
+    if((time = GetDirLastModifyTime(root_dir_path))<0)
+    {
+        printf("GetDir failed \n");
+        return -1;
+    }
+    printf("dir [%s]  lastmodify time[%ld] \n",root_dir_path,time);
+    return 0;
+ }
+
 
 
 
@@ -270,9 +312,10 @@ int main(int argc,char **argv)
 	ret = system("clear");
 #endif
     printf("fsysMange test::\n");
-	printf("01		Get directory sub directory\n");
-	printf("02		Get directory file\n");
+	printf("01		Get directory sub directory \n");
+	printf("02		Get directory file \n");
     printf("03      GetDir \n");
+    printf("04      Print dir LastModifyTime \n");
 	printf("Exit	exit\n");
 	printf("\n");
 
@@ -297,6 +340,9 @@ int main(int argc,char **argv)
 		break;
 	case 3:
         test_GetDir();
+        break;
+    case 4:
+        test_GetDirLastModifyTime();
         break;
 	default:
 		printf("not support the choice\n");
