@@ -56,7 +56,7 @@ int IsIPv4InSubnet(const char *ip1,const char *netmask1,const char *ip2,const ch
     inet_pton(AF_INET,ip2,(void*)&l_ip2);
     inet_pton(AF_INET,netmask1,(void*)&l_mask1);
     inet_pton(AF_INET,netmask2,(void*)&l_mask2);
-    return (l_ip.s_addr1&l_mask1.s_addr) == l_ip2.s_addr1&l_mask2.s_addr1 ;
+    return (l_ip1.s_addr&l_mask1.s_addr) == (l_ip2.s_addr&l_mask2.s_addr) ;
 }
 
 
@@ -831,8 +831,8 @@ int main(int argc,char **argv)
     strcpy(netmask1,argv[2]);
     strcpy(ip2,argv[3]);
     strcpy(netmask2,argv[4]);
-
-    if((ret = IsIPv4InSubnet(ip1,netmask1,ip2,netmask2)) == 0)
+    int ret = 0;
+    if((ret = IsIPv4InSubnet(ip1,netmask1,ip2,netmask2)) !=0 )
     {
         printf("in the same subnet\n");
     }else{
