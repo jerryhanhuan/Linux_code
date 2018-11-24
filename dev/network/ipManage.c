@@ -56,7 +56,7 @@ int IsIPv4InSubnet(const char *ip1,const char *netmask1,const char *ip2,const ch
     inet_pton(AF_INET,ip2,(void*)&l_ip2);
     inet_pton(AF_INET,netmask1,(void*)&l_mask1);
     inet_pton(AF_INET,netmask2,(void*)&l_mask2);
-    return memcmp(&(l_ip1&l_mask1),&(l_ip2&l_mask2),sizeof(struct in_addr));
+    return (l_ip.s_addr1&l_mask1.s_addr) == l_ip2.s_addr1&l_mask2.s_addr1 ;
 }
 
 
