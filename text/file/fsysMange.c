@@ -189,7 +189,7 @@ int GetDir(char *dirPath)
 
 
 /*
-    获取某个目录上次修改的时间
+    获取某个目录上次修改的时间，只能判断目录，如果目录下的子目录中的文件被修改，目录的修改时间不会变化
 */
 
 long GetDirLastModifyTime(char *path)
@@ -205,6 +205,7 @@ long GetDirLastModifyTime(char *path)
         return -1;
     }
     changetime = finfo.st_mtime;
+    printf("in GetDirLastModifyTime::st_atime[%ld] st_mtime[%ld] st_ctime[%ld]\n",finfo.st_atime,finfo.st_mtime,finfo.st_ctime);
     return changetime;
 }
 
