@@ -308,7 +308,7 @@ int get_gateway(char* gateway)
     fgets(buf, sizeof(buf), fp);
     while (fgets(buf, sizeof(buf), fp)) {
 
-        if (sscanf(buf, "%s %lX %lX", iface,&dest_addr, &gate_addr) == 3 && gate_addr!= 0)
+        if (sscanf(buf, "%s %lX %lX", iface,&dest_addr, &gate_addr) == 3 && dest_addr == 0 && gate_addr!= 0)
         {
             p = gate_addr;
             break;

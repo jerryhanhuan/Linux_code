@@ -187,7 +187,6 @@ int set_sys_time(char *date)
     }
        
     t = mktime(&t_time);
-	printf("set t::[%ld]\n",t);
     ret = stime(&t);
     return ret;
 }
@@ -210,7 +209,6 @@ int set_hwclock()
     time_t t;
     struct tm utc;
     time(&t);
-	printf("get t::[%ld]\n",t);
     gmtime_r(&t,&utc);
     utc.tm_isdst = 0;	// disable DST
     if (ioctl(rtc,RTC_SET_TIME, (struct rtc_time *)&utc) == -1)
@@ -233,7 +231,7 @@ int set_hwclock()
 
 
 
-
+/*
 int main()
 {
 
@@ -255,5 +253,5 @@ int main()
 
 
 }
-
+*/
 
