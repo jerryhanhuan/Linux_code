@@ -184,6 +184,45 @@ int route_del(const char *ip, const char *netmask,char *device)
 }
 
 
+int route_show()
+{
+    FILE *fp;
+    char buf[256]; // 128 is enough for linux
+    char iface[16];
+    char tmpgateway[32]={0};
+    unsigned long dest_addr, gate_addr,p,mask_addr;
+    p = INADDR_NONE;
+    char destaddr[32]={0};
+    char gatewayaddr[32]={0};
+    char netmask[32]={0};
+    fp = fopen("/proc/net/route", "r");
+    if (fp == NULL)
+    {
+        printf("can not open %s\n","/proc/net/route");
+        return -1;
+        }
+    /* Skip title line */
+    fgets(buf, sizeof(buf), fp);
+    while (fgets(buf, sizeof(buf), fp)) {
+        
+        if (sscanf(buf, "%s %lX %lX %*d %*d %*d %*d %lX", iface,&dest_addr, &gate_addr,&mask_addr) == 4)
+        {
+            inet_ntop(AF_INET,&dest_addr,destaddr,sizeof(destaddr));
+            inet_ntop(AF_INET,&gate_addr,gatewayaddr,sizeof(gatewayaddr));
+            inet_ntop(AF_INET,&mask_addr,netmask,sizeof(netmask));
+            printf("%s %s %s %s \n",destaddr,gatewayaddr,netmask,iface);
+        }
+        memset(buf,0,sizeof(buf));
+        memset(destaddr,0,sizeof(destaddr));
+        memset(gatewayaddr,0,sizeof(gatewayaddr));
+        memset(netmask,0,sizeof(netmask));
+    }
+    fclose(fp);
+    fp = NULL;
+    return 0;
+}
+
+
 int main(int argc,char **argv)
 {
     int ret = 0;
@@ -228,7 +267,11 @@ int main(int argc,char **argv)
 		{
 			printf("route_del ok\n");
 		}
-    }else{
+    }else if(strcmp(operation,"show") == 0)
+    {
+        route_show();
+    }
+    else{
         printf("err operation\n");
     }
     return 0;
