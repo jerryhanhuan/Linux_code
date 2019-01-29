@@ -48,7 +48,7 @@ int main()
     pthread_join(t1,NULL);
     pthread_join(t2,NULL);
 
-    printf("main thread exit\n");
+    printf("\nmain thread exit\n");
     return 0;
 }
 
