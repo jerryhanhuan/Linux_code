@@ -183,6 +183,73 @@ int route_del(const char *ip, const char *netmask,char *device)
     return error;
 }
 
+int route_del2(const char *ip, const char *netmask,const char *gateway,char *device)
+{
+    struct rtentry rt;
+    struct sockaddr_in *sinaddr;
+    int inetfd;
+    int error = 0;
+    int ret = 0;
+
+    //create socket
+    inetfd = socket(AF_INET, SOCK_DGRAM, 0);
+    if (inetfd < 0)
+    {
+        printf("in route_del::socket failed errno[%d]\n", errno);
+        return errno;
+    }
+    memset(&rt, 0, sizeof(rt));
+    error = 0;
+    do
+    {
+        //set target ip
+        sinaddr = (struct sockaddr_in *)(&rt.rt_dst);
+		sinaddr->sin_family = AF_INET;
+        ret = inet_pton(AF_INET, ip, &(sinaddr->sin_addr));
+        if (ret != 1)
+        {
+            printf("in route_del::inet_pton ip[%s] failed errno[%d]\n", ip,errno);
+            error = errno;
+            break;
+        }
+
+        //set netmask
+        sinaddr = (struct sockaddr_in *) (&rt.rt_genmask);
+		sinaddr->sin_family = AF_INET;
+        ret = inet_pton(AF_INET,netmask,&(sinaddr->sin_addr));
+        if (ret != 1)
+        {
+            printf("in route_del::inet_pton netmask[%s] failed errno[%d]\n", netmask,errno);
+            error = errno;
+            break;
+        }
+
+          //set gateway
+        sinaddr = (struct sockaddr_in *) (&rt.rt_gateway);
+		sinaddr->sin_family = AF_INET;
+        ret = inet_pton(AF_INET,gateway,&(sinaddr->sin_addr));
+		rt.rt_flags |= RTF_GATEWAY;
+        if (ret != 1)
+        {
+            printf("in route_del::inet_pton gateway[%s] failed errno[%d]\n", gateway,errno);
+            error = errno;
+            break;
+        }
+
+		
+        //set device 
+        if(device != NULL  && strlen(device)!=0)
+            rt.rt_dev = device;
+	
+		
+        if (ioctl(inetfd, SIOCDELRT, &rt) == -1)
+            error = errno;
+
+    } while (0);
+    close(inetfd);
+    return error;
+}
+
 
 int route_show()
 {
@@ -221,6 +288,13 @@ int route_show()
     fp = NULL;
     return 0;
 }
+
+
+
+
+
+
+
 
 
 int main(int argc,char **argv)
@@ -267,7 +341,24 @@ int main(int argc,char **argv)
 		{
 			printf("route_del ok\n");
 		}
-    }else if(strcmp(operation,"show") == 0)
+    }else if(strcmp(operation,"del2") ==0){
+
+          strcpy(ip,argv[2]);
+          strcpy(netmask,argv[3]);
+          strcpy(gateway,argv[4]);
+        if(argc > 5)
+              strcpy(devname,argv[5]);
+        printf("del2 ip %s netmask  %s  gateway %s %s\n",ip,netmask,gateway,devname);
+        ret = route_del2(ip,netmask,gateway,devname);
+        if(ret)
+        {
+            perror("route_del2 failed \n");
+        }else
+		{
+			printf("route_del2 ok\n");
+		}
+    }
+    else if(strcmp(operation,"show") == 0)
     {
         route_show();
     }
