@@ -13,7 +13,7 @@ RETURN VALUE
 */
 
 
-void* thread1 (void*)
+void* thread1 (void* arg)
 {
     while(1)
     {
