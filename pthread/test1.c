@@ -45,8 +45,8 @@ int main()
         return -1;
     }
 
-    pthread_join(&t1,NULL);
-    pthread_join(&t2,NULL);
+    pthread_join(t1,NULL);
+    pthread_join(t2,NULL);
 
     printf("main thread exit\n");
     return 0;
